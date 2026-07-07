@@ -25,7 +25,8 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 @Composable
 fun HomeScreen(
     flashcardsViewModel: FlashcardsViewModel,
-    quotesViewModel: QuotesViewModel
+    quotesViewModel: QuotesViewModel,
+    onNavigateToFlashcards: () -> Unit
 ) {
     val quotes by quotesViewModel.quotes.collectAsState()
     val flashcards by  flashcardsViewModel.flashcards.collectAsState()
@@ -39,7 +40,7 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text(
-            text = "Willkommen Zurück",
+            text = "Willkommen",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(vertical = 24.dp)
         )
@@ -69,7 +70,6 @@ fun HomeScreen(
         }
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Kurze Info zu den Lernkarten
         Text(
             text = "Dein Lernstatus:",
             style = MaterialTheme.typography.titleMedium
@@ -80,8 +80,8 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button, der später zu den Flashcards führt
-        Button(onClick = { /* Hier später Navigation einbauen */ }) {
+
+        Button(onClick =  { onNavigateToFlashcards() } ) {
             Text("Jetzt Lernen")
         }
     }
@@ -92,6 +92,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
     HomeScreen(
         flashcardsViewModel = FlashcardsViewModel(),
-        quotesViewModel = QuotesViewModel()
+        quotesViewModel = QuotesViewModel(),
+        onNavigateToFlashcards = {}
     )
 }

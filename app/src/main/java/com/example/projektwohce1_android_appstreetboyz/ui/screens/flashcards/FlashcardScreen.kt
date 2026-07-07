@@ -42,12 +42,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
+import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
 
 @Composable
 fun FlashcardScreen(
     viewModel: FlashcardsViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    audioPlayer: AudioPlayer? = null
 ) {
     val flashcards by viewModel.filteredFlashcards.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
@@ -113,7 +115,8 @@ fun FlashcardScreen(
                     rotationY = rotation
                     cameraDistance = 8 * density
                 }
-                .clickable { isFlipped = !isFlipped },
+                .clickable { isFlipped = !isFlipped
+                    audioPlayer?.playFlip()},
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             ),
