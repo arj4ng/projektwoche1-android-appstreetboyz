@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.projektwohce1_android_appstreetboyz.ViewModels.DataSource
 import com.example.projektwohce1_android_appstreetboyz.data.model.Flashcard
-import com.example.projektwohce1_android_appstreetboyz.data.model.Quote
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,9 +17,6 @@ class FlashcardsViewModel: ViewModel() {
 
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex
-
-    private val _quotes = MutableStateFlow(DataSource.quotes)
-    val quotes: StateFlow<List<Quote>> = _quotes
 
     private val _masteredCards = MutableStateFlow<List<Flashcard>>(value = emptyList())
     val masteredCards: StateFlow<List<Flashcard>> = _masteredCards

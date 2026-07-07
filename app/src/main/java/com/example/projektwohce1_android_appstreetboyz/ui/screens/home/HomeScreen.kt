@@ -20,13 +20,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontStyle
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
+import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: FlashcardsViewModel
+    flashcardsViewModel: FlashcardsViewModel,
+    quotesViewModel: QuotesViewModel
 ) {
-    val quotes by viewModel.quotes.collectAsState()
-    val flashcards by  viewModel.flashcards.collectAsState()
+    val quotes by quotesViewModel.quotes.collectAsState()
+    val flashcards by  flashcardsViewModel.flashcards.collectAsState()
 
     val dailyQuote = quotes.firstOrNull()
 
@@ -89,6 +91,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     HomeScreen(
-        viewModel = FlashcardsViewModel()
+        flashcardsViewModel = FlashcardsViewModel(),
+        quotesViewModel = QuotesViewModel()
     )
 }
