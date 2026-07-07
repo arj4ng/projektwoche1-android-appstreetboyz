@@ -1,2 +1,0 @@
-package com.example.projektwohce1_android_appstreetboyz.ViewModels
-
