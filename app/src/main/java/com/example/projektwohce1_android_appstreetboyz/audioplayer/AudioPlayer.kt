@@ -39,12 +39,6 @@ class AudioPlayer(context: Context) {
 }
 
 /*
-IMPORTS die benötigt werden:
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.DisposableEffect
-
-
 Screens den Audioplayer übergeben: audioPlayer: AudioPlayer
 
 
