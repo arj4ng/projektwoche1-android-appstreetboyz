@@ -25,8 +25,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
+import com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards.TopicScreen
 import com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz.QuizScreen
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
+
 
 @Composable
 fun Appstart(
@@ -69,7 +71,12 @@ fun Appstart(
                         label = { Text(screen.label)},
                         selected = currentRoute == screen.route,//logik für die Buttonfarbe (gedrückt/nichtgedrückt)
                         onClick = {
-                            navController.navigate(screen.route) {
+                            val finalRoute = if (screen.route == Route.Flashcards.route) {
+                                Route.TopicSelection.route
+                            } else {
+                                screen.route
+                            }
+                            navController.navigate(finalRoute) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true //verhindert das sich der "Zurück Stapel" unendlich füllt
                                 }
