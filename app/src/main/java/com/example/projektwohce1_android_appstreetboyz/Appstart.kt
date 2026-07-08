@@ -2,6 +2,7 @@ package com.example.projektwohce1_android_appstreetboyz
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,7 +21,9 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewM
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -28,8 +31,10 @@ import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards.TopicScreen
 import com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz.QuizScreen
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Appstart(
     flashcardsViewModel: FlashcardsViewModel,
@@ -60,6 +65,18 @@ fun Appstart(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
+        topBar = {
+            if (currentRoute == Route.TopicSelection.route || currentRoute == Route.Flashcards.route) {
+                TopAppBar(
+                    title = { Text(if(currentRoute == Route.TopicSelection.route) "Themenwahl" else "Lernen") },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(imageVector =Icons.Default.ArrowBack, contentDescription = "Zurück")
+                        }
+                    }
+                )
+            }
+        },
         bottomBar =  {
             NavigationBar {
                 navigationItems.forEach { screen ->

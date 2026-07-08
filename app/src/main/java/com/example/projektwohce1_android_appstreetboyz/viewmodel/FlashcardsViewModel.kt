@@ -29,64 +29,91 @@ class FlashcardsViewModel: ViewModel() {
     private val _selectedCategory = MutableStateFlow<String?>(value = null)
     val selectedCategory: StateFlow<String?> = _selectedCategory
 
+    // Track which cards have been swiped in the current normal session
+    private val _sessionSwipedIds = MutableStateFlow<Set<Int>>(emptySet())
+
     val filteredFlashcards: StateFlow<List<Flashcard>> = combine(
-        flow = _flashcards,
-        flow2 = _selectedCategory,
-        flow3 = _isRepeatMode
-    ) { cards, category, isRepeat  ->
+        _flashcards,
+        _selectedCategory,
+        _isRepeatMode,
+        _cardsToRepeat,
+        _sessionSwipedIds
+    ) { cards, category, isRepeat, repeatCards, swipedIds ->
         if (isRepeat) {
-            _cardsToRepeat.value //Wenn WiederholungsModus nur diese zeigen
-        } else if (category == null) {
-            cards //Alle zeigen
+            repeatCards
         } else {
-            cards.filter { it.category == category } //Nach Thema filtern
+            val baseCards = if (category == null) cards else cards.filter { it.category == category }
+            // In normal mode, remove cards that were already swiped in this session
+            baseCards.filter { it.id !in swipedIds }
         }
     }.stateIn(
         viewModelScope,
         started = SharingStarted.Lazily,
-        initialValue = DataSource.flashcards
+        initialValue = emptyList()
     )
 
     fun setRepeatMode(active: Boolean) {
         _isRepeatMode.value = active
         _currentIndex.value = 0
+        _sessionSwipedIds.value = emptySet() // Resetet die Session modus geändert
+
     }
 
 
     fun selectCategory(category: String?) {
         _selectedCategory.value = category
         _currentIndex.value = 0 // Zurück zum Anfang beim Themenwechsel
+        _sessionSwipedIds.value = emptySet() // Reset session when changing category
     }
+
     fun previousCard() {
         if (_currentIndex.value > 0) {
             _currentIndex.value -= 1
         }
     }
+
     fun swipeRight(card: Flashcard) {
-       if (_isRepeatMode.value) {
-           //Löschen
-           _cardsToRepeat.value = _cardsToRepeat.value.filter { it.id != card.id }
-           //sicherhaltshalber anpassen falls wir am Ende der Liste sind
-           if(_currentIndex.value >= _cardsToRepeat.value.size && _currentIndex.value > 0) {
-               _currentIndex.value -= 1
-           }
-       } else {
-           _masteredCards.value += card
-           nextCard()
-       }
+        if (_isRepeatMode.value) {
+            // Aus der Wiederholungsliste löschen
+            val updatedList = _cardsToRepeat.value.filter { it.id != card.id }
+            _cardsToRepeat.value = updatedList
+
+            // Index korrigieren: Wenn wir am Ende sind, zurück auf 0 oder eins zurück
+            if (updatedList.isEmpty()) {
+                _currentIndex.value = 0
+            } else if (_currentIndex.value >= updatedList.size) {
+                _currentIndex.value = updatedList.size - 1
+            }
+        } else {
+            // Normaler Modus: Karte als gelernt markieren und aus der Session entfernen
+            _masteredCards.value += card
+            _sessionSwipedIds.value += card.id
+
+            // Da die Liste schrumpft, versuchen wir beim Index 0 zu bleiben (die nächste Karte rückt nach)
+            // Nur wenn wir wirklich am Ende sind, setzen wir zurück.
+            if (_currentIndex.value >= (filteredFlashcards.value.size - 1)) {
+                _currentIndex.value = 0
+            }
+        }
     }
+
     fun swipeLeft(card: Flashcard) {
-        if (!_cardsToRepeat.value.contains(card)) {
-            _cardsToRepeat.value += card
+        if (_isRepeatMode.value) {
+            // Karte bleibt in der Liste, wir springen zur nächsten Karte (Loop)
+            val currentSize = filteredFlashcards.value.size
+            if (currentSize > 0) {
+                _currentIndex.value = (_currentIndex.value + 1) % currentSize
+            }
+        } else {
+            // Normaler Modus: Karte zur Wiederholung hinzufügen und aus der Session entfernen
+            if (!_cardsToRepeat.value.contains(card)) {
+                _cardsToRepeat.value += card
+            }
+            _sessionSwipedIds.value += card.id
+
+            if (_currentIndex.value >= (filteredFlashcards.value.size - 1)) {
+                _currentIndex.value = 0
+            }
         }
-        nextCard()
-    }
-    fun nextCard() {
-        if (_currentIndex.value < _flashcards.value.size - 1) {
-            _currentIndex.value += 1
-        }
-    }
-    fun markAsMastered(id: Int) {
-        //Logik um Krate als gelernt zu markieren
     }
 }
