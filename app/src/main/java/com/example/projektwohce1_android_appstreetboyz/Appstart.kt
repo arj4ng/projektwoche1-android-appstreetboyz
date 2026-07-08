@@ -31,7 +31,8 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
 @Composable
 fun Appstart(
     flashcardsViewModel: FlashcardsViewModel,
-    quotesViewModel: QuotesViewModel
+    quotesViewModel: QuotesViewModel,
+    quizViewModel: QuizViewModel
 ){
     //AUDIOPLAYER
     val context = LocalContext.current
@@ -118,7 +119,7 @@ fun Appstart(
             }
             composable(Route.Quiz.route) {
                 QuizScreen(
-                    viewModel = QuizViewModel(),
+                    viewModel = quizViewModel,
                     audioPlayer = audioPlayer
                 )
             }
@@ -131,6 +132,7 @@ fun Appstart(
 private fun AppstartPreview() {
     Appstart(
         flashcardsViewModel = FlashcardsViewModel(),
-        quotesViewModel = QuotesViewModel()
+        quotesViewModel = QuotesViewModel(),
+        quizViewModel = QuizViewModel()
     )
 }

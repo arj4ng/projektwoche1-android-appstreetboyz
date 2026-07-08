@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import com.example.projektwohce1_android_appstreetboyz.ui.theme.ProjektWohce1_Android_AppStreetBoyzTheme
+import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
                 Appstart(
                     flashcardsViewModel = FlashcardsViewModel(),
                     quotesViewModel = QuotesViewModel(),
+                    quizViewModel = QuizViewModel(),
                 )
             }
         }
