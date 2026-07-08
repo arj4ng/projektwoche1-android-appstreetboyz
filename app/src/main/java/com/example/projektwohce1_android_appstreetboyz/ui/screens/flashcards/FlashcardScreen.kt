@@ -51,6 +51,7 @@ fun FlashcardScreen(
     onNavigateBack: () -> Unit,
     audioPlayer: AudioPlayer? = null
 ) {
+    val cardsToRepeat by viewModel.cardsToRepeat.collectAsState()
     val flashcards by viewModel.filteredFlashcards.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
 
@@ -76,6 +77,16 @@ fun FlashcardScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        if (cardsToRepeat.isNotEmpty()) {
+            Text(
+                text = "Tipp : \nKarten links werden unter 'Wiederholen' gespeichert!",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(Alignment.Start)
+            )
+        }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
