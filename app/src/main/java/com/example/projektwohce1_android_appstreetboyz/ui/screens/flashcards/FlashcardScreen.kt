@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.IntOffset
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
@@ -44,6 +45,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
+import androidx.compose.material3.Button
 
 @Composable
 fun FlashcardScreen(
@@ -54,6 +56,31 @@ fun FlashcardScreen(
     val cardsToRepeat by viewModel.cardsToRepeat.collectAsState()
     val flashcards by viewModel.filteredFlashcards.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
+
+    if (flashcards.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Glückwunsch!",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Text("Du hast alle Karten für heute gelernt.")
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    viewModel.setRepeatMode(false)
+                    onNavigateBack()
+                }
+            ) {
+                Text("Zurück zum Start")
+            }
+        }
+        return
+    }
 
     var isFlipped by remember { mutableStateOf(false) }
     val currentCard = flashcards[currentIndex]
@@ -126,8 +153,10 @@ fun FlashcardScreen(
                     rotationY = rotation
                     cameraDistance = 8 * density
                 }
-                .clickable { isFlipped = !isFlipped
-                    audioPlayer?.playFlip()},
+                .clickable {
+                    isFlipped = !isFlipped
+                    audioPlayer?.playFlip()
+                },
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             ),

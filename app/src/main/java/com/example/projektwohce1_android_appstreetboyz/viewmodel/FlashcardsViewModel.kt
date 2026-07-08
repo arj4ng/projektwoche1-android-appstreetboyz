@@ -63,8 +63,17 @@ class FlashcardsViewModel: ViewModel() {
         }
     }
     fun swipeRight(card: Flashcard) {
-        _masteredCards.value += card
-        nextCard()
+       if (_isRepeatMode.value) {
+           //Löschen
+           _cardsToRepeat.value = _cardsToRepeat.value.filter { it.id != card.id }
+           //sicherhaltshalber anpassen falls wir am Ende der Liste sind
+           if(_currentIndex.value >= _cardsToRepeat.value.size && _currentIndex.value > 0) {
+               _currentIndex.value -= 1
+           }
+       } else {
+           _masteredCards.value += card
+           nextCard()
+       }
     }
     fun swipeLeft(card: Flashcard) {
         if (!_cardsToRepeat.value.contains(card)) {
