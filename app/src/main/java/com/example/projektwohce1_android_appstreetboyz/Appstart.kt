@@ -100,13 +100,12 @@ fun Appstart(
                     flashcardsViewModel = flashcardsViewModel,
                     quotesViewModel = quotesViewModel,
                     onNavigateToFlashcards = {
-                        navController.navigate(Route.TopicSelection.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        flashcardsViewModel.setRepeatMode(false)
+                        navController.navigate(Route.TopicSelection.route)
+                    },
+                    onStartRepeat = {
+                        flashcardsViewModel.setRepeatMode(true)
+                        navController.navigate(Route.Flashcards.route)
                     }
                 )
             }

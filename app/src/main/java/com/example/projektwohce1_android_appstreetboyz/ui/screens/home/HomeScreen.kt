@@ -28,7 +28,8 @@ import androidx.compose.foundation.layout.Row
 fun HomeScreen(
     flashcardsViewModel: FlashcardsViewModel,
     quotesViewModel: QuotesViewModel,
-    onNavigateToFlashcards: () -> Unit
+    onNavigateToFlashcards: () -> Unit,
+    onStartRepeat: () -> Unit
 ) {
     val quotes by quotesViewModel.quotes.collectAsState()
     val flashcards by  flashcardsViewModel.flashcards.collectAsState()
@@ -106,7 +107,7 @@ fun HomeScreen(
                         modifier = Modifier.weight(1f)
                     )
                     Button(
-                        onClick = onNavigateToFlashcards
+                        onClick = onStartRepeat
                     ) {
                         Text("Starten")
                     }
@@ -122,6 +123,7 @@ private fun HomeScreenPreview() {
     HomeScreen(
         flashcardsViewModel = FlashcardsViewModel(),
         quotesViewModel = QuotesViewModel(),
-        onNavigateToFlashcards = {}
+        onNavigateToFlashcards = {},
+        onStartRepeat = {}
     )
 }
