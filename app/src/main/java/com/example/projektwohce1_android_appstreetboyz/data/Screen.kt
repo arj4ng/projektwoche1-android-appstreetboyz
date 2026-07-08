@@ -3,6 +3,8 @@ package com.example.projektwohce1_android_appstreetboyz.data
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.List
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Route(
@@ -29,5 +31,10 @@ sealed class Route(
         route = "quotes",
         label = "Quotes",
         icon = Icons.Default.Star
+    )
+    object TopicSelection: Route(
+        route = "topic_selection",
+        label = "Themen",
+        icon = Icons.Default.List
     )
 }

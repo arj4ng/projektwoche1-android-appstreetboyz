@@ -74,7 +74,7 @@ fun Appstart(
                     flashcardsViewModel = flashcardsViewModel,
                     quotesViewModel = quotesViewModel,
                     onNavigateToFlashcards = {
-                        navController.navigate(Route.Flashcards.route) {
+                        navController.navigate(Route.TopicSelection.route) {
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
