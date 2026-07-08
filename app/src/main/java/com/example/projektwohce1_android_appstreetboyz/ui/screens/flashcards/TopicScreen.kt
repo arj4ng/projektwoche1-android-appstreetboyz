@@ -1,4 +1,4 @@
-package com.example.projektwohce1_android_appstreetboyz.ui.components
+package com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
