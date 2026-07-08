@@ -43,7 +43,7 @@ fun QuizScreen(viewModel: QuizViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (!isFinished) {
+        if (isFinished) {
             ResultContent(
                 score = score,
                 total = viewModel.totalQuestions,
@@ -129,7 +129,7 @@ private fun AnswerButton(
         onClick = onClick,
         enabled = !answered,
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = Color.White, disabledContainerColor = containerColor
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = MaterialTheme.colorScheme.primary, disabledContainerColor = containerColor
         )
 
     ) {

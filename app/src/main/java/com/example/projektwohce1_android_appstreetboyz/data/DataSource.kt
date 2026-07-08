@@ -1,6 +1,8 @@
 package com.example.projektwohce1_android_appstreetboyz.ViewModels
 
 import com.example.projektwohce1_android_appstreetboyz.data.model.Flashcard
+import com.example.projektwohce1_android_appstreetboyz.data.model.QuestionType
+import com.example.projektwohce1_android_appstreetboyz.data.model.QuizQuestion
 import com.example.projektwohce1_android_appstreetboyz.data.model.Quote
 import com.example.projektwohce1_android_appstreetboyz.data.model.QuoteCategory
 
@@ -248,6 +250,62 @@ object DataSource {
             text = "Der einzige Weg, das Unmögliche zu erreichen, ist der Glaube, dass es möglich ist.",
             author = "Charles Kingsleigh",
             category = QuoteCategory.MOTIVATIONAL
+        )
+    )
+
+    // Liste von Quiz Fragen
+    // Gemischte Fragen: Multiple-Choice (mit options) und Wahr/Falsch (options bleibt leer).
+    // Bei TRUE_FALSE zeigt der QuizScreen feste "Wahr"/"Falsch"-Buttons.
+    val quizQuestions = listOf(
+        QuizQuestion(
+            question = "Welches Schlüsselwort erzeugt in Kotlin eine unveränderliche Variable?",
+            options = listOf("var", "val", "let", "const"),
+            correctAnswer = "val",
+            type = QuestionType.MULTIPLE_CHOICE
+        ),
+        QuizQuestion(
+            question = "Jetpack Compose ist ein deklaratives UI-Framework.",
+            correctAnswer = "Wahr", // options bleibt leer -> Wahr/Falsch-Frage
+            type = QuestionType.TRUE_FALSE
+        ),
+        QuizQuestion(
+            question = "Welche Funktion ist der Einstiegspunkt eines Kotlin-Programms?",
+            options = listOf("start()", "run()", "main()", "init()"),
+            correctAnswer = "main()",
+            type = QuestionType.MULTIPLE_CHOICE
+        ),
+        QuizQuestion(
+            question = "In Compose baut man die UI mit XML-Layout-Dateien.",
+            correctAnswer = "Falsch", // Compose nutzt Kotlin-Funktionen statt XML
+            type = QuestionType.TRUE_FALSE
+        ),
+        QuizQuestion(
+            question = "Womit beobachtet man einen StateFlow in einem Composable?",
+            options = listOf("observe()", "collectAsState()", "getValue()", "watch()"),
+            correctAnswer = "collectAsState()",
+            type = QuestionType.MULTIPLE_CHOICE
+        ),
+        QuizQuestion(
+            question = "Was bewirkt die '@Composable' Annotation?",
+            options = listOf(
+                "Sie macht eine Funktion asynchron",
+                "Sie markiert eine Funktion als UI-Komponente",
+                "Sie erzeugt eine neue Activity",
+                "Sie startet einen Hintergrund-Thread"
+            ),
+            correctAnswer = "Sie markiert eine Funktion als UI-Komponente",
+            type = QuestionType.MULTIPLE_CHOICE
+        ),
+        QuizQuestion(
+            question = "Der Elvis-Operator '?:' liefert einen Standardwert, wenn der linke Ausdruck null ist.",
+            correctAnswer = "Wahr",
+            type = QuestionType.TRUE_FALSE
+        ),
+        QuizQuestion(
+            question = "Welche Komponente eignet sich für große, scrollbare Listen in Compose?",
+            options = listOf("Column", "LazyColumn", "Row", "Box"),
+            correctAnswer = "LazyColumn",
+            type = QuestionType.MULTIPLE_CHOICE
         )
     )
 }
