@@ -29,14 +29,18 @@ class QuizViewModel: ViewModel() {
 
     fun currentQuestion(): QuizQuestion = question[_currentIndex.value.coerceIn(0, question.lastIndex)]
 
-    fun selectAnswer(answer: String) {
-        if (_selectedAnswer.value != null) return
+    fun selectAnswer(answer: String): Boolean {
+        if (_selectedAnswer.value != null) return false
 
         _selectedAnswer.value = answer
 
-        if (answer == currentQuestion().correctAnswer) {
+        val isCorrect = answer == currentQuestion().correctAnswer
+
+        if (isCorrect) {
             _score.value += 1
         }
+
+        return isCorrect
     }
 
     fun nextQuestion() {

@@ -21,13 +21,30 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards.TopicScreen
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
+import com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz.QuizScreen
+import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
 
 @Composable
 fun Appstart(
     flashcardsViewModel: FlashcardsViewModel,
-    quotesViewModel: QuotesViewModel
+    quotesViewModel: QuotesViewModel,
+    quizViewModel: QuizViewModel
 ){
+    //AUDIOPLAYER
+    val context = LocalContext.current
+    val audioPlayer = remember {
+        AudioPlayer(context)
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            audioPlayer.release()
+        }
+
+    }
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()//meldet jedes mal wenn die Seite wechselt
     val currentRoute = navBackStackEntry?.destination?.route
@@ -35,7 +52,8 @@ fun Appstart(
     val navigationItems = listOf(
         Route.Home,
         Route.Flashcards,
-        Route.Quotes
+        Route.Quotes,
+        Route.Quiz
     )
     Scaffold(
         modifier = Modifier
@@ -98,12 +116,19 @@ fun Appstart(
                     viewModel = flashcardsViewModel,
                     onNavigateBack = {
                         navController.popBackStack()
-                    }
+                    },
+                    audioPlayer = audioPlayer
                 )
             }
             composable(Route.Quotes.route) {
                 QuotesScreen(
                     viewModel = quotesViewModel
+                )
+            }
+            composable(Route.Quiz.route) {
+                QuizScreen(
+                    viewModel = quizViewModel,
+                    audioPlayer = audioPlayer
                 )
             }
         }
@@ -115,6 +140,7 @@ fun Appstart(
 private fun AppstartPreview() {
     Appstart(
         flashcardsViewModel = FlashcardsViewModel(),
-        quotesViewModel = QuotesViewModel()
+        quotesViewModel = QuotesViewModel(),
+        quizViewModel = QuizViewModel()
     )
 }
