@@ -21,15 +21,19 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontStyle
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
+import androidx.compose.foundation.layout.Row
+
 
 @Composable
 fun HomeScreen(
     flashcardsViewModel: FlashcardsViewModel,
     quotesViewModel: QuotesViewModel,
-    onNavigateToFlashcards: () -> Unit
+    onNavigateToFlashcards: () -> Unit,
+    onStartRepeat: () -> Unit
 ) {
     val quotes by quotesViewModel.quotes.collectAsState()
     val flashcards by  flashcardsViewModel.flashcards.collectAsState()
+    val cardsToRepeat by flashcardsViewModel.cardsToRepeat.collectAsState()
 
     val dailyQuote = quotes.firstOrNull()
 
@@ -84,6 +88,32 @@ fun HomeScreen(
         Button(onClick =  { onNavigateToFlashcards() } ) {
             Text("Jetzt Lernen")
         }
+        if (cardsToRepeat.isNotEmpty()){
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Du hast ${cardsToRepeat.size} Karten zum Wiederholen!",
+                        modifier = Modifier.weight(1f)
+                    )
+                    Button(
+                        onClick = onStartRepeat
+                    ) {
+                        Text("Starten")
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -93,6 +123,7 @@ private fun HomeScreenPreview() {
     HomeScreen(
         flashcardsViewModel = FlashcardsViewModel(),
         quotesViewModel = QuotesViewModel(),
-        onNavigateToFlashcards = {}
+        onNavigateToFlashcards = {},
+        onStartRepeat = {}
     )
 }

@@ -6,4 +6,4 @@ data class Flashcard(
     val answer: String,
     val category: String, //kotlin/swift
     var isMastered: Boolean = false
-){}
+)
