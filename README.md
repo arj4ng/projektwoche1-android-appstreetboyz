@@ -20,9 +20,9 @@
 </p>
 
 <ul>
-  <li><strong>Home</strong> als Startpunkt mit kurzer Übersicht</li>
+  <li><strong>Home</strong> als Startpunkt mit kurzer Übersicht und schnellem Einstieg</li>
   <li><strong>Flashcards</strong> zum aktiven Lernen per Karteikarten</li>
-  <li><strong>Quotes</strong> zum Stöbern, Filtern und Markieren von Favoriten</li>
+  <li><strong>QuoteCraft / Quotes</strong> zum Stöbern, Filtern und Markieren von Favoriten</li>
 </ul>
 
 <p>
@@ -39,7 +39,7 @@
   <li>Begrüßung beim Start der App</li>
   <li>Anzeige eines täglichen Zitats aus dem vorhandenen Datensatz</li>
   <li>Kurze Übersicht über vorhandene Lernkarten</li>
-  <li>Button zum Wechsel in den Lernbereich</li>
+  <li>Button zum direkten Wechsel in den Lernbereich</li>
 </ul>
 
 <h3>Flashcards</h3>
@@ -54,10 +54,12 @@
 
 <h3>Quotes</h3>
 <ul>
-  <li>Anzeige von Zitaten in einer klaren Kartenansicht</li>
+  <li>Eigener Seitentitel <strong>QuoteCraft</strong></li>
+  <li>Anzeige von Zitaten in einer klaren, reduzierten Kartenansicht</li>
   <li>Filter nach Kategorien</li>
   <li>Favoritenfunktion über Herzsymbol pro Quote</li>
-  <li>Eigener Favoriten-Button oben rechts zum Laden nur der Lieblingszitate</li>
+  <li>Favoriten-Button oben rechts zum Umschalten auf Lieblingszitate</li>
+  <li>Einfacherer Aufbau ohne unnötige Zusatzinfos pro Karte</li>
 </ul>
 
 <h3>Quiz</h3>
@@ -84,6 +86,7 @@
   <li><strong>State:</strong> <code>StateFlow</code> / <code>MutableStateFlow</code></li>
   <li><strong>Navigation:</strong> Navigation Compose</li>
   <li><strong>Datenquelle:</strong> lokale statische Daten über <code>DataSource</code></li>
+  <li><strong>Navigation im UI:</strong> Bottom Navigation zwischen Home, Lernen und Quotes</li>
   <li><strong>Min SDK:</strong> 24</li>
 </ul>
 
@@ -122,7 +125,7 @@
 </p>
 
 <p>
-  Gerade die Kombination aus Lernkarten, Zitaten und einem vorbereiteten Quiz zeigt,
+  Gerade die Kombination aus Lernkarten, Zitaten, Favoritenfunktion und einem vorbereiteten Quiz zeigt,
   dass hier Schritt für Schritt an einer kleinen Lernplattform gearbeitet wurde.
 </p>
 
