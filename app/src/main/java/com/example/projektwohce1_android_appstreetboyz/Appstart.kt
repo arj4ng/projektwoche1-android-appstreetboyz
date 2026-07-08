@@ -93,13 +93,21 @@ fun Appstart(
                     flashcardsViewModel = flashcardsViewModel,
                     quotesViewModel = quotesViewModel,
                     onNavigateToFlashcards = {
-                        navController.navigate(Route.Flashcards.route) {
+                        navController.navigate(Route.TopicSelection.route) {
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
                             launchSingleTop = true
                             restoreState = true
                         }
+                    }
+                )
+            }
+            composable(Route.TopicSelection.route) {
+                TopicScreen(
+                    viewModel = flashcardsViewModel,
+                    onTopicSelected = {
+                        navController.navigate(Route.Flashcards.route)
                     }
                 )
             }
