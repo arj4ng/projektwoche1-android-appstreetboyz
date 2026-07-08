@@ -24,12 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.data.model.QuestionType
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
 
 
 @Composable
-fun QuizScreen(viewModel: QuizViewModel) {
+fun QuizScreen(
+    viewModel: QuizViewModel,
+    audioPlayer: AudioPlayer? = null) {
 
     val currentIndex by viewModel.currentIndex.collectAsState()
     val selectedAnswer by viewModel.selectedAnswer.collectAsState()
@@ -88,7 +91,15 @@ fun QuizScreen(viewModel: QuizViewModel) {
                     text = option,
                     selectedAnswer = selectedAnswer,
                     currentAnswer = question.correctAnswer,
-                    onClick = { viewModel.selectAnswer(option) }
+                    onClick = {
+                        val isCorrect = viewModel.selectAnswer(option)
+
+                        if (isCorrect) {
+                            audioPlayer?.playCorrect()
+                        } else {
+                            audioPlayer?.playWrong()
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -97,11 +108,23 @@ fun QuizScreen(viewModel: QuizViewModel) {
             if (selectedAnswer != null) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { viewModel.nextQuestion() },
+
+                    onClick = {
+
+                        audioPlayer?.playFlip()
+
+                        viewModel.nextQuestion()
+
+                    },
+
                     modifier = Modifier.fillMaxWidth()
+
                 ) {
+
                     val isLast = currentIndex == viewModel.totalQuestions - 1
+
                     Text(if (isLast) "Ergebnis anzeigen" else "Weiter")
+
                 }
             }
         }
