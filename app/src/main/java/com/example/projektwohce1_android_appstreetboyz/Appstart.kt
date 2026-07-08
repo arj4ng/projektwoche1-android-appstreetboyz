@@ -21,6 +21,7 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards.TopicScreen
 
 @Composable
 fun Appstart(
@@ -81,6 +82,14 @@ fun Appstart(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    }
+                )
+            }
+            composable(Route.TopicSelection.route) {
+                TopicScreen(
+                    viewModel = flashcardsViewModel,
+                    onTopicSelected = {
+                        navController.navigate(Route.Flashcards.route)
                     }
                 )
             }
