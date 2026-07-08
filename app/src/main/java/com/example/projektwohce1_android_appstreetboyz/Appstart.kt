@@ -2,6 +2,7 @@ package com.example.projektwohce1_android_appstreetboyz
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -20,14 +21,20 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewM
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
+import com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards.TopicScreen
 import com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz.QuizScreen
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Appstart(
     flashcardsViewModel: FlashcardsViewModel,
@@ -58,6 +65,18 @@ fun Appstart(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
+        topBar = {
+            if (currentRoute == Route.TopicSelection.route || currentRoute == Route.Flashcards.route) {
+                TopAppBar(
+                    title = { Text(if(currentRoute == Route.TopicSelection.route) "Themenwahl" else "Lernen") },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(imageVector =Icons.Default.ArrowBack, contentDescription = "Zurück")
+                        }
+                    }
+                )
+            }
+        },
         bottomBar =  {
             NavigationBar {
                 navigationItems.forEach { screen ->
@@ -69,7 +88,12 @@ fun Appstart(
                         label = { Text(screen.label)},
                         selected = currentRoute == screen.route,//logik für die Buttonfarbe (gedrückt/nichtgedrückt)
                         onClick = {
-                            navController.navigate(screen.route) {
+                            val finalRoute = if (screen.route == Route.Flashcards.route) {
+                                Route.TopicSelection.route
+                            } else {
+                                screen.route
+                            }
+                            navController.navigate(finalRoute) {
                                 popUpTo(navController.graph.startDestinationId) {
                                     saveState = true //verhindert das sich der "Zurück Stapel" unendlich füllt
                                 }
@@ -93,13 +117,12 @@ fun Appstart(
                     flashcardsViewModel = flashcardsViewModel,
                     quotesViewModel = quotesViewModel,
                     onNavigateToFlashcards = {
-                        navController.navigate(Route.TopicSelection.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        flashcardsViewModel.setRepeatMode(false)
+                        navController.navigate(Route.TopicSelection.route)
+                    },
+                    onStartRepeat = {
+                        flashcardsViewModel.setRepeatMode(true)
+                        navController.navigate(Route.Flashcards.route)
                     }
                 )
             }

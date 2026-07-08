@@ -9,16 +9,22 @@ import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuotesViewModel
 import com.example.projektwohce1_android_appstreetboyz.ui.theme.ProjektWohce1_Android_AppStreetBoyzTheme
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ProjektWohce1_Android_AppStreetBoyzTheme {
+                val flashcardsViewModel: FlashcardsViewModel = viewModel()
+                val quotesViewModel: QuotesViewModel = viewModel()
+                val quizViewModel: QuizViewModel = viewModel()
+
                 Appstart(
-                    flashcardsViewModel = FlashcardsViewModel(),
-                    quotesViewModel = QuotesViewModel(),
-                    quizViewModel = QuizViewModel(),
+                    flashcardsViewModel = flashcardsViewModel,
+                    quotesViewModel = quotesViewModel,
+                    quizViewModel = quizViewModel,
                 )
             }
         }

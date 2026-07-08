@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.IntOffset
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
@@ -44,6 +45,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
+import androidx.compose.material3.Button
 
 @Composable
 fun FlashcardScreen(
@@ -54,9 +56,61 @@ fun FlashcardScreen(
     val cardsToRepeat by viewModel.cardsToRepeat.collectAsState()
     val flashcards by viewModel.filteredFlashcards.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
+    val isRepeatMode by viewModel.isRepeatMode.collectAsState()
+
+    if (flashcards.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "🎉 Super gemacht!",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Text(
+                text = when {
+                    isRepeatMode -> "Alle Fehler korrigiert!"
+                    cardsToRepeat.isNotEmpty() -> "Thema beendet! Du hast noch ${cardsToRepeat.size} Fehler offen."
+                    else -> "Dieses Thema hast du durch."
+                },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            if (!isRepeatMode && cardsToRepeat.isNotEmpty()) {
+                Button(
+                    onClick = { viewModel.setRepeatMode(true) }
+                ) {
+                    Text("Jetzt wiederholen")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            Button(
+                onClick = {
+                    viewModel.setRepeatMode(false)
+                    onNavigateBack()
+                }
+            ) {
+                Text("Zurück zum Start")
+            }
+        }
+        return
+    }
 
     var isFlipped by remember { mutableStateOf(false) }
-    val currentCard = flashcards[currentIndex]
+    
+    // Sicherer Zugriff auf die Karte mit getOrNull
+    val currentCard = flashcards.getOrNull(currentIndex)
+    
+    // Falls der Index kurzzeitig out of bounds ist (während Recomposition)
+    if (currentCard == null) {
+        // Wir könnten hier einen Ladeindikator zeigen oder einfach kurz warten
+        return
+    }
+
     val offsetX = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
     val cardColor = when {
@@ -70,6 +124,7 @@ fun FlashcardScreen(
         animationSpec = tween(durationMillis = 1000)
     )
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +132,7 @@ fun FlashcardScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (cardsToRepeat.isNotEmpty()) {
+        if (!isRepeatMode && cardsToRepeat.isNotEmpty()) {
             Text(
                 text = "Tipp : \nKarten links werden unter 'Wiederholen' gespeichert!",
                 style = MaterialTheme.typography.titleSmall,
@@ -92,7 +147,7 @@ fun FlashcardScreen(
                 .fillMaxWidth()
                 .height(250.dp)
                 .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                .pointerInput(Unit) {
+                .pointerInput(currentCard?.id) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
                             change.consume()
@@ -100,22 +155,25 @@ fun FlashcardScreen(
                             scope.launch { offsetX.snapTo(offsetX.value + dragAmount.x) }
                         },
                         onDragEnd = {
-                            // Wenn weit genug gewischt wurde (z.B. 400 Pixel)
-                            if (offsetX.value > 400) {
-                                // Nach RECHTS (Gelernt)
-                                viewModel.swipeRight(currentCard)
-                                scope.launch { offsetX.snapTo(0f) } // Zurück in die Mitte für die neue Karte
-                            } else if (offsetX.value < -400) {
-                                // Nach LINKS (Wiederholen)
-                                viewModel.swipeLeft(currentCard)
-                                scope.launch { offsetX.snapTo(0f) }
-                            } else {
-                                // Nicht weit genug gewischt -> Karte springt in die Mitte zurück
-                                scope.launch {
-                                    offsetX.animateTo(
-                                        0f,
-                                        spring()
-                                    )
+                            val cardToSwipe = currentCard
+                            if (cardToSwipe != null) {
+                                // Wenn weit genug gewischt wurde (z.B. 400 Pixel)
+                                if (offsetX.value > 400) {
+                                    // Nach RECHTS (Gelernt)
+                                    viewModel.swipeRight(cardToSwipe)
+                                    scope.launch { offsetX.snapTo(0f) }
+                                } else if (offsetX.value < -400) {
+                                    // Nach LINKS (Wiederholen)
+                                    viewModel.swipeLeft(cardToSwipe)
+                                    scope.launch { offsetX.snapTo(0f) }
+                                } else {
+                                    // Nicht weit genug gewischt -> Karte springt in die Mitte zurück
+                                    scope.launch {
+                                        offsetX.animateTo(
+                                            0f,
+                                            spring()
+                                        )
+                                    }
                                 }
                             }
                             isFlipped = false // Neue Karte immer mit der Frage zeigen
@@ -126,8 +184,10 @@ fun FlashcardScreen(
                     rotationY = rotation
                     cameraDistance = 8 * density
                 }
-                .clickable { isFlipped = !isFlipped
-                    audioPlayer?.playFlip()},
+                .clickable {
+                    isFlipped = !isFlipped
+                    audioPlayer?.playFlip()
+                },
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             ),
