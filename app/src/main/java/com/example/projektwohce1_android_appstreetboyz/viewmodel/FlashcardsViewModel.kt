@@ -49,7 +49,9 @@ class FlashcardsViewModel: ViewModel() {
         nextCard()
     }
     fun swipeLeft(card: Flashcard) {
-        _cardsToRepeat.value += card
+        if (!_cardsToRepeat.value.contains(card)) {
+            _cardsToRepeat.value += card
+        }
         nextCard()
     }
     fun nextCard() {
