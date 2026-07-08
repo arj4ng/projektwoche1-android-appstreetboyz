@@ -83,7 +83,7 @@ fun FlashcardScreen(
                 Button(
                     onClick = { viewModel.setRepeatMode(true) }
                 ) {
-                    Text("Fehler jetzt wiederholen")
+                    Text("Jetzt wiederholen")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
