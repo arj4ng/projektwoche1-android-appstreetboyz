@@ -131,6 +131,17 @@ fun FlashcardScreen(
         isFlipped -> MaterialTheme.colorScheme.tertiaryContainer
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
+    val cardContentColor = when {
+        offsetX.value > 150f || offsetX.value < -150f -> Color(0xFF1A1A1A)
+        isFlipped -> MaterialTheme.colorScheme.onTertiaryContainer
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val cardLabelColor = when {
+        offsetX.value > 150f -> Color(0xFF1B5E20)
+        offsetX.value < -150f -> Color(0xFFB71C1C)
+        isFlipped -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.primary
+    }
     val rotation by animateFloatAsState(
         targetValue = if (isFlipped) 180f else 0f,
         animationSpec = tween(durationMillis = 1000)
@@ -252,13 +263,14 @@ fun FlashcardScreen(
                     Text(
                         text = if (isFlipped) "ANTWORT" else "FRAGE",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = cardLabelColor,
                     )
                     Text(
                         text = if (isFlipped) currentCard.answer else currentCard.question,
                         style = MaterialTheme.typography.headlineSmall,
                         modifier = Modifier.padding(top = 16.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = cardContentColor
                     )
                 }
             }
