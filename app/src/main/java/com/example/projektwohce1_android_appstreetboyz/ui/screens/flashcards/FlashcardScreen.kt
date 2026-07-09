@@ -2,6 +2,7 @@ package com.example.projektwohce1_android_appstreetboyz.ui.screens.flashcards
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -38,14 +40,21 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.FlashcardsViewModel
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun FlashcardScreen(
@@ -60,12 +69,15 @@ fun FlashcardScreen(
 
     if (flashcards.isEmpty()) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "🎉 Super gemacht!",
+                text = "Super gemacht",
                 style = MaterialTheme.typography.headlineMedium
             )
             Text(
@@ -128,26 +140,59 @@ fun FlashcardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 20.dp, vertical = 18.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (!isRepeatMode && cardsToRepeat.isNotEmpty()) {
-            Text(
-                text = "Tipp : \nKarten links werden unter 'Wiederholen' gespeichert!",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.Start)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(28.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             )
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Text(
+                    text = if (isRepeatMode) "Wiederholung aktiv" else "Lernmodus aktiv",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = if (!isRepeatMode && cardsToRepeat.isNotEmpty()) {
+                        "Wische links für später, rechts für gelernt. Tippen = Karte drehen."
+                    } else {
+                        "Tippe zum Umdrehen. Wische klar nach links oder rechts für den nächsten Schritt."
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.82f)
+                )
+            }
         }
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .weight(1f)
+                .height(340.dp)
                 .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                .pointerInput(currentCard?.id) {
+                .pointerInput(currentCard.id) {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
                             change.consume()
@@ -155,25 +200,22 @@ fun FlashcardScreen(
                             scope.launch { offsetX.snapTo(offsetX.value + dragAmount.x) }
                         },
                         onDragEnd = {
-                            val cardToSwipe = currentCard
-                            if (cardToSwipe != null) {
-                                // Wenn weit genug gewischt wurde (z.B. 400 Pixel)
-                                if (offsetX.value > 400) {
-                                    // Nach RECHTS (Gelernt)
-                                    viewModel.swipeRight(cardToSwipe)
-                                    scope.launch { offsetX.snapTo(0f) }
-                                } else if (offsetX.value < -400) {
-                                    // Nach LINKS (Wiederholen)
-                                    viewModel.swipeLeft(cardToSwipe)
-                                    scope.launch { offsetX.snapTo(0f) }
-                                } else {
-                                    // Nicht weit genug gewischt -> Karte springt in die Mitte zurück
-                                    scope.launch {
-                                        offsetX.animateTo(
-                                            0f,
-                                            spring()
-                                        )
-                                    }
+                            // Wenn weit genug gewischt wurde (z.B. 400 Pixel)
+                            if (offsetX.value > 400) {
+                                // Nach RECHTS (Gelernt)
+                                viewModel.swipeRight(currentCard)
+                                scope.launch { offsetX.snapTo(0f) }
+                            } else if (offsetX.value < -400) {
+                                // Nach LINKS (Wiederholen)
+                                viewModel.swipeLeft(currentCard)
+                                scope.launch { offsetX.snapTo(0f) }
+                            } else {
+                                // Nicht weit genug gewischt -> Karte springt in die Mitte zurück
+                                scope.launch {
+                                    offsetX.animateTo(
+                                        0f,
+                                        spring()
+                                    )
                                 }
                             }
                             isFlipped = false // Neue Karte immer mit der Frage zeigen
@@ -191,12 +233,14 @@ fun FlashcardScreen(
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            shape = RoundedCornerShape(30.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(24.dp)
                     .graphicsLayer {
                         if (rotation > 90f) rotationY = 180f
                     }
@@ -209,44 +253,87 @@ fun FlashcardScreen(
                         text = if (isFlipped) "ANTWORT" else "FRAGE",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .padding(top = 12.dp)
                     )
                     Text(
                         text = if (isFlipped) currentCard.answer else currentCard.question,
                         style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .padding(16.dp),
+                        modifier = Modifier.padding(top = 16.dp),
                         textAlign = TextAlign.Center
                     )
                 }
             }
         }
-        Text(
-            text = "Karte ${currentIndex + 1} von ${flashcards.size}",
-            modifier = Modifier.padding(16.dp)
-        )
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { viewModel.previousCard() }
+            Card(
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "zurück",
-                )
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Fortschritt",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.78f)
+                    )
+                    Text(
+                        text = "${currentIndex + 1} / ${flashcards.size}",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
+            OutlinedButton(
+                onClick = { viewModel.previousCard() },
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronLeft,
+                    contentDescription = "Zurück"
+                )
+                Text(" Zurück")
+            }
         }
-        TextButton(onClick = {
-            viewModel.selectCategory(null)
-            onNavigateBack()
-        }) {
-            Text("Thema wechseln")
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            TextButton(
+                onClick = {
+                    viewModel.selectCategory(null)
+                    onNavigateBack()
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Thema wechseln")
+            }
+
+            Button(
+                onClick = {
+                    viewModel.setRepeatMode(false)
+                    onNavigateBack()
+                },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null
+                )
+                Text(" Übersicht")
+            }
         }
     }
 }
