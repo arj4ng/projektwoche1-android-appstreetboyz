@@ -35,7 +35,7 @@ fun HomeScreen(
     val flashcards by  flashcardsViewModel.flashcards.collectAsState()
     val cardsToRepeat by flashcardsViewModel.cardsToRepeat.collectAsState()
 
-    val dailyQuote = quotes.firstOrNull()
+    val dailyQuote = quotes.randomOrNull()
 
     Column(
         modifier = Modifier
