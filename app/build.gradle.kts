@@ -60,4 +60,6 @@ dependencies {
     //Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization)
+    //Konfetti
+    implementation("nl.dionsegijn:konfetti-compose:2.0.5")
 }
