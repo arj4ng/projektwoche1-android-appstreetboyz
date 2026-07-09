@@ -107,7 +107,7 @@ fun TopicScreen(
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         Text(
-                            text = "$cardsToRepeat Karten warten noch auf dich.",
+                            text = "${cardsToRepeat.count()} Karten warten noch auf dich.",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                         )
