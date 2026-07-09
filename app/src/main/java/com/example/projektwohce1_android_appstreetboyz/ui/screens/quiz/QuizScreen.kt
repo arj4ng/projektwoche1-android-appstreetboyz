@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -114,27 +115,22 @@ fun QuizScreen(
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-                Text(
-                    text = "Frage ${currentIndex + 1} von ${viewModel.totalQuestions}. Tippe Antwort. Sound, Übergänge, Ergebnis bleiben aktiv.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.82f)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    StatusPill(
+                        modifier = Modifier.weight(1f),
+                        label = "Fortschritt",
+                        value = "${currentIndex + 1}/${viewModel.totalQuestions}"
+                    )
+                    StatusPill(
+                        modifier = Modifier.weight(1f),
+                        label = "Punkte",
+                        value = score.toString()
+                    )
+                }
             }
-        }
-
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            StatusPill(
-                label = "Fortschritt",
-                value = "${currentIndex + 1}/${viewModel.totalQuestions}"
-            )
-            StatusPill(
-                label = "Punkte",
-                value = score.toString()
-            )
         }
 
         AnimatedContent(
@@ -208,30 +204,21 @@ fun QuizScreen(
 
 @Composable
 private fun StatusPill(
+    modifier: Modifier = Modifier,
     label: String,
     value: String
 ) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.76f)
-            )
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(label)
+            Text(value)
         }
     }
 }
