@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,6 +51,7 @@ fun QuizScreen(
             ResultContent(
                 score = score,
                 total = viewModel.totalQuestions,
+                audioPlayer = audioPlayer,
                 onRestart = { viewModel.restart() }
             )
         } else {
@@ -165,9 +167,19 @@ private fun AnswerButton(
 private fun ResultContent(
     score: Int,
     total: Int,
+    audioPlayer: AudioPlayer?,
     onRestart: () -> Unit
 
 ) {
+    LaunchedEffect(Unit) {
+        when {
+            score == total -> audioPlayer?.playPerfect()
+            score < total / 2 -> audioPlayer?.playLose()
+            else -> audioPlayer?.playVictory()
+
+        }
+
+    }
     Text(
         text = "Quiz beendet!",
         style = MaterialTheme.typography.headlineMedium,

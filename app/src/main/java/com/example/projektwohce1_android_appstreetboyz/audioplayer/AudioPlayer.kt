@@ -15,9 +15,14 @@ class AudioPlayer(context: Context) {
     private val correct = soundPool.load(context, R.raw.correct, 1)
     private val wrong = soundPool.load(context, R.raw.wrong, 1)
     private val flip = soundPool.load(context, R.raw.flip, 1)
+    private val lose = soundPool.load(context, R.raw.rick, 1)
+    private val victory = soundPool.load(context, R.raw.takeonme, 1)
+    private val perfect = soundPool.load(context, R.raw.iwantitthatway, 1)
+
 
 
     //Hier werden die Sound übergeben
+
     fun playCorrect() {
         soundPool.play(correct, 1f, 1f, 1, 0, 1f)
     }
@@ -30,6 +35,17 @@ class AudioPlayer(context: Context) {
         soundPool.play(flip, 1f, 1f, 1, 0, 1f)
     }
 
+    fun playLose() {
+        soundPool.play(lose, 0.5f, 0.5f, 1, 0, 0.7f)
+    }
+
+    fun playVictory() {
+        soundPool.play(victory, 0.5f, 0.5f, 1, 0, 0.8f)
+    }
+
+    fun playPerfect() {
+        soundPool.play(perfect, 0.5f, 0.5f, 1, 0, 0.8f)
+    }
     //SoundPool belegt Speicher,wenn du eine Seite verlässt, brauchst du ihn nicht mehr.
 
     fun release() {
