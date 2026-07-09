@@ -1,108 +1,121 @@
-<h1 align="center">QuoteCraft</h1>
+<div align="center">
 
-<p align="center">
-  Kleine Lern-App mit <strong>Quotes</strong>, <strong>Flashcards</strong> und vorbereitetem <strong>Quiz</strong>.<br/>
-  Entwickelt mit <strong>Kotlin</strong>, <strong>Jetpack Compose</strong> und einer einfachen <strong>MVVM-Struktur</strong>.
+# AppStreetBoyz Learning App
+
+<p>
+  <strong>Modern Android study app</strong><br/>
+  Flashcards, quotes, quiz, audio feedback, repeat flows, favorites, dark mode.
 </p>
+
+<p>
+  <img src="https://img.shields.io/badge/Kotlin-2D6BFF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin"/>
+  <img src="https://img.shields.io/badge/Jetpack%20Compose-6B5BD2?style=for-the-badge&logo=jetpackcompose&logoColor=white" alt="Jetpack Compose"/>
+  <img src="https://img.shields.io/badge/Material%203-FF8A3D?style=for-the-badge&logo=materialdesign&logoColor=white" alt="Material 3"/>
+  <img src="https://img.shields.io/badge/MVVM-12141C?style=for-the-badge&logo=android&logoColor=white" alt="MVVM"/>
+</p>
+
+</div>
+
+<br/>
+
+<table>
+  <tr>
+    <td width="52%" valign="top">
+      <h2>What Project Is</h2>
+      <p>
+        AppStreetBoyz is compact learning app built in <strong>Kotlin</strong> with <strong>Jetpack Compose</strong>.
+        It mixes three core study modes into one flow:
+      </p>
+      <ul>
+        <li><strong>Flashcards</strong> for active recall</li>
+        <li><strong>Quotes</strong> for short motivation and saved favorites</li>
+        <li><strong>Quiz</strong> for fast knowledge checks with sound and result feedback</li>
+      </ul>
+      <p>
+        Project started as team app and now has more polished UI direction:
+        stronger typography, custom color theme, modern cards, cleaner dashboards, and better dark mode handling.
+      </p>
+    </td>
+    <td width="48%" valign="top">
+      <h2>Highlights</h2>
+      <ul>
+        <li>Custom light + dark theme</li>
+        <li>Modern home dashboard</li>
+        <li>Swipe flashcards with repeat logic</li>
+        <li>Quote filters + favorites</li>
+        <li>Quiz with animations, sounds, confetti</li>
+        <li>Bottom navigation app shell</li>
+        <li>StateFlow-based MVVM structure</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 <hr/>
 
-<h2>Über das Projekt</h2>
+<h2>Feature Overview</h2>
 
-<p>
-  QuoteCraft ist aus einer Teamarbeit entstanden und kombiniert mehrere kleine Lern- und Motivationsideen in einer App.
-  Ziel war kein überladenes Produkt, sondern eine Anwendung, die sich leicht anfühlt und trotzdem mehrere Funktionen
-  an einem Ort bündelt.
-</p>
-
-<p>
-  Aktuell liegt der Fokus auf drei Bereichen:
-</p>
-
+<h3>Home</h3>
 <ul>
-  <li><strong>Home</strong> als Startpunkt mit kurzer Übersicht und schnellem Einstieg</li>
-  <li><strong>Flashcards</strong> zum aktiven Lernen per Karteikarten</li>
-  <li><strong>QuoteCraft / Quotes</strong> zum Stöbern, Filtern und Markieren von Favoriten</li>
-</ul>
-
-<p>
-  Das <strong>Quiz</strong> ist daten- und logikseitig bereits vorbereitet und als eigener Screen vorhanden,
-  ist aber im aktuellen Stand noch nicht vollständig in den Hauptfluss der App eingebunden.
-</p>
-
-<hr/>
-
-<h2>Was aktuell schon funktioniert</h2>
-
-<h3>Home-Screen</h3>
-<ul>
-  <li>Begrüßung beim Start der App</li>
-  <li>Anzeige eines täglichen Zitats aus dem vorhandenen Datensatz</li>
-  <li>Kurze Übersicht über vorhandene Lernkarten</li>
-  <li>Button zum direkten Wechsel in den Lernbereich</li>
+  <li>Hero dashboard entry screen</li>
+  <li>Quick stats for total cards and repeat cards</li>
+  <li>Daily quote section</li>
+  <li>Fast jump into learning or repeat flow</li>
 </ul>
 
 <h3>Flashcards</h3>
 <ul>
-  <li>Themenbasierte Lernkarten aus dem lokalen <code>DataSource</code>-Datensatz</li>
-  <li>Kategorien wie <em>Kotlin Compose</em> und <em>SwiftUI</em></li>
-  <li>Karten lassen sich drehen</li>
-  <li>Swipe-Logik für gelernt / wiederholen</li>
-  <li>Fortschritt über den aktuellen Kartenindex</li>
-  <li>Optionaler Audio-Hook beim Flippen der Karte</li>
+  <li>Topic-based study cards from local data</li>
+  <li>Tap to flip question ↔ answer</li>
+  <li>Swipe right = learned</li>
+  <li>Swipe left = send to repeat queue</li>
+  <li>Repeat mode for missed cards</li>
+  <li>Audio feedback on card flip</li>
+  <li>Dark-mode-safe swipe colors and readable text</li>
 </ul>
 
 <h3>Quotes</h3>
 <ul>
-  <li>Eigener Seitentitel <strong>QuoteCraft</strong></li>
-  <li>Anzeige von Zitaten in einer klaren, reduzierten Kartenansicht</li>
-  <li>Filter nach Kategorien</li>
-  <li>Favoritenfunktion über Herzsymbol pro Quote</li>
-  <li>Favoriten-Button oben rechts zum Umschalten auf Lieblingszitate</li>
-  <li>Einfacherer Aufbau ohne unnötige Zusatzinfos pro Karte</li>
+  <li>Modern quote browser</li>
+  <li>Category filter chips</li>
+  <li>Favorite toggle with local in-memory state</li>
+  <li>Dedicated favorites view</li>
 </ul>
 
 <h3>Quiz</h3>
 <ul>
-  <li>Fragenmodell für Multiple Choice und Wahr/Falsch vorhanden</li>
-  <li>Quiz-Daten bereits im <code>DataSource</code> angelegt</li>
-  <li><code>QuizViewModel</code> verwaltet Fragenindex, Auswahl, Punktezahl und Neustart</li>
-  <li><code>QuizScreen</code> ist vorbereitet und zeigt Fragen, Antworten und Ergebnisansicht</li>
-</ul>
-
-<p>
-  <strong>Wichtig:</strong> Der Quiz-Bereich ist technisch schon deutlich weiter als “leer”, aber aktuell noch nicht
-  sauber in die Hauptnavigation integriert.
-</p>
-
-<hr/>
-
-<h2>Technischer Stand</h2>
-
-<ul>
-  <li><strong>Sprache:</strong> Kotlin</li>
-  <li><strong>UI:</strong> Jetpack Compose + Material 3</li>
-  <li><strong>Architektur:</strong> MVVM</li>
-  <li><strong>State:</strong> <code>StateFlow</code> / <code>MutableStateFlow</code></li>
-  <li><strong>Navigation:</strong> Navigation Compose</li>
-  <li><strong>Datenquelle:</strong> lokale statische Daten über <code>DataSource</code></li>
-  <li><strong>Navigation im UI:</strong> Bottom Navigation zwischen Home, Lernen und Quotes</li>
-  <li><strong>Min SDK:</strong> 24</li>
+  <li>Multiple choice + true/false questions</li>
+  <li>Animated question transitions</li>
+  <li>Correct / wrong / next / result sounds</li>
+  <li>Perfect-score confetti result state</li>
+  <li>Score tracking and restart flow</li>
 </ul>
 
 <hr/>
 
-<h2>Projektstruktur</h2>
+<h2>Tech Stack</h2>
+
+<table>
+  <tr><td><strong>Language</strong></td><td>Kotlin</td></tr>
+  <tr><td><strong>UI</strong></td><td>Jetpack Compose + Material 3</td></tr>
+  <tr><td><strong>Architecture</strong></td><td>MVVM</td></tr>
+  <tr><td><strong>State</strong></td><td>StateFlow / MutableStateFlow</td></tr>
+  <tr><td><strong>Navigation</strong></td><td>Navigation Compose</td></tr>
+  <tr><td><strong>Data</strong></td><td>Local static DataSource</td></tr>
+  <tr><td><strong>Audio</strong></td><td>Custom AudioPlayer hooks</td></tr>
+  <tr><td><strong>Effects</strong></td><td>Konfetti for perfect quiz result</td></tr>
+  <tr><td><strong>Min SDK</strong></td><td>24</td></tr>
+</table>
+
+<hr/>
+
+<h2>Project Structure</h2>
 
 <pre><code>app/src/main/java/com/example/projektwohce1_android_appstreetboyz/
+├── audioplayer/
 ├── data/
-│   ├── DataSource.kt
-│   ├── Screen.kt
-│   └── model/
-├── viewmodel/
-│   ├── FlashcardsViewModel.kt
-│   ├── QuotesViewModel.kt
-│   └── QuizViewModel.kt
+│   ├── model/
+│   └── DataSource.kt
 ├── ui/
 │   ├── screens/
 │   │   ├── home/
@@ -110,47 +123,55 @@
 │   │   ├── quotes/
 │   │   └── quiz/
 │   └── theme/
+├── viewmodel/
+│   ├── FlashcardsViewModel.kt
+│   ├── QuotesViewModel.kt
+│   └── QuizViewModel.kt
 ├── Appstart.kt
 └── MainActivity.kt
 </code></pre>
 
 <hr/>
 
-<h2>Was an der App sympathisch macht</h2>
+<h2>Run Project</h2>
+
+<ol>
+  <li>Open project in <strong>Android Studio</strong></li>
+  <li>Sync Gradle</li>
+  <li>Run on emulator or physical Android device</li>
+</ol>
 
 <p>
-  QuoteCraft versucht nicht, alles gleichzeitig zu sein.
-  Die App mischt Motivation, Lernen und kleine Interaktionen in einer Form,
-  die sich eher wie ein Studienprojekt mit Persönlichkeit anfühlt als wie ein generischer Demo-Clone.
-</p>
-
-<p>
-  Gerade die Kombination aus Lernkarten, Zitaten, Favoritenfunktion und einem vorbereiteten Quiz zeigt,
-  dass hier Schritt für Schritt an einer kleinen Lernplattform gearbeitet wurde.
+  Main app flow starts from <code>Appstart.kt</code>.
 </p>
 
 <hr/>
 
-<h2>Nächste sinnvolle Schritte</h2>
+<h2>Why This Project Stands Out</h2>
+
+<p>
+  This is not just plain classroom CRUD app.
+  It has motion, interaction, themed UI, sound feedback, repeat learning logic, and multiple study surfaces inside one small Android app.
+</p>
+
+<p>
+  Biggest strength = app feels like real product direction, not just disconnected demo screens.
+</p>
+
+<hr/>
+
+<h2>Next Good Upgrades</h2>
 
 <ul>
-  <li>Quiz vollständig in die Hauptnavigation einbinden</li>
-  <li><code>MainActivity</code> auf den echten App-Einstieg umstellen bzw. final bereinigen</li>
-  <li>Favoriten optional persistent speichern</li>
-  <li>UI weiter vereinheitlichen</li>
-  <li>Tests für ViewModels und zentrale User-Flows ergänzen</li>
+  <li>Persist favorites and progress locally</li>
+  <li>Add tests for ViewModels and key flows</li>
+  <li>Unify top bar / bottom nav styling even more</li>
+  <li>Add onboarding or empty-state illustrations</li>
+  <li>Track streaks or study sessions</li>
 </ul>
 
 <hr/>
 
-<h2>Fazit</h2>
-
-<p>
-  Der aktuelle Stand von QuoteCraft ist bereits gut greifbar:
-  <strong>Home</strong>, <strong>Flashcards</strong> und <strong>Quotes</strong> liefern schon echte Interaktion,
-  während das <strong>Quiz</strong> als nächster logischer Ausbauschritt bereitsteht.
-</p>
-
-<p>
-  Für ein Teamprojekt ist das eine starke Grundlage, auf der man sauber weiterbauen kann.
-</p>
+<div align="center">
+  <strong>Built with Kotlin, Compose, and too many UI polish passes.</strong>
+</div>
