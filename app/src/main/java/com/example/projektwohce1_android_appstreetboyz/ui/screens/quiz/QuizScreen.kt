@@ -1,7 +1,17 @@
 package com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz
 
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +38,11 @@ import androidx.compose.ui.unit.dp
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.data.model.QuestionType
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
-
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun QuizScreen(
@@ -64,21 +78,32 @@ fun QuizScreen(
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(16.dp))
+            AnimatedContent(
+                targetState = question.question,
+                transitionSpec = {
+                    (slideInHorizontally { it } + fadeIn())
+                        .togetherWith(
+                            slideOutHorizontally { -it } + fadeOut()
+                        )
+                },
+                label = "QuestionAnimation"
+            ) { questionText ->
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Text(
-                    text = question.question,
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-                )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Text(
+                        text = questionText,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -171,33 +196,62 @@ private fun ResultContent(
     onRestart: () -> Unit
 
 ) {
-    LaunchedEffect(Unit) {
-        when {
-            score == total -> audioPlayer?.playPerfect()
-            score < total / 2 -> audioPlayer?.playLose()
-            else -> audioPlayer?.playVictory()
-
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (score == total) {
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = listOf(
+                    Party(
+                        speed = 25f,
+                        maxSpeed = 50f,
+                        angle = 270,
+                        spread = 360,
+                        emitter = Emitter(
+                            duration = 2,
+                            TimeUnit.SECONDS
+                        ).perSecond(200),
+                        position = Position.Relative(0.5, 0.0)
+                    )
+                )
+            )
         }
-
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LaunchedEffect(Unit) {
+                when {
+                    score == total -> audioPlayer?.playPerfect()
+                    score < total / 2 -> audioPlayer?.playLose()
+                    else -> audioPlayer?.playVictory()
+                }
+            }
+            Text(
+                text = "Quiz beendet!",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Du hast $score von $total Fragen richtig beantwortet.",
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(onClick = onRestart) {
+                Text("Nochmal Spielen")
+            }
+        }
     }
-    Text(
-        text = "Quiz beendet!",
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.Bold
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text = "Du hast $score von $total Fragen richtig beantwortet.",
-        style = MaterialTheme.typography.titleLarge,
-        textAlign = TextAlign.Center
-    )
-    Spacer(modifier = Modifier.height(32.dp))
-    Button(onClick = onRestart) {
-        Text("Nochmal Spielen")
-    }
-
-
 }
+
+
+
+
+
 @Preview(showSystemUi = true)
 @Composable
 private fun QuizScreenPreview() {
