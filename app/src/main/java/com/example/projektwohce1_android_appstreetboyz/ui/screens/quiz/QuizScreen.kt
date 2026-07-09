@@ -1,17 +1,33 @@
 package com.example.projektwohce1_android_appstreetboyz.ui.screens.quiz
 
-
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +36,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,110 +45,194 @@ import androidx.compose.ui.unit.dp
 import com.example.projektwohce1_android_appstreetboyz.audioplayer.AudioPlayer
 import com.example.projektwohce1_android_appstreetboyz.data.model.QuestionType
 import com.example.projektwohce1_android_appstreetboyz.viewmodel.QuizViewModel
-
+import java.util.concurrent.TimeUnit
+import nl.dionsegijn.konfetti.compose.KonfettiView
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
 
 @Composable
 fun QuizScreen(
     viewModel: QuizViewModel,
-    audioPlayer: AudioPlayer? = null) {
-
+    audioPlayer: AudioPlayer? = null
+) {
     val currentIndex by viewModel.currentIndex.collectAsState()
     val selectedAnswer by viewModel.selectedAnswer.collectAsState()
     val score by viewModel.score.collectAsState()
     val isFinished by viewModel.isFinished.collectAsState()
 
+    if (isFinished) {
+        ResultContent(
+            score = score,
+            total = viewModel.totalQuestions,
+            audioPlayer = audioPlayer,
+            onRestart = { viewModel.restart() }
+        )
+        return
+    }
+
+    val question = viewModel.currentQuestion()
+    val options = if (question.type == QuestionType.TRUE_FALSE) {
+        listOf("Wahr", "Falsch")
+    } else {
+        question.options
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 20.dp, vertical = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (isFinished) {
-            ResultContent(
-                score = score,
-                total = viewModel.totalQuestions,
-                audioPlayer = audioPlayer,
-                onRestart = { viewModel.restart() }
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(28.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             )
-        } else {
+        ) {
+            Column(
+                modifier = Modifier.padding(22.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Bolt,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Text(
+                    text = "Quizmodus",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = "Frage ${currentIndex + 1} von ${viewModel.totalQuestions}. Tippe Antwort. Sound, Übergänge, Ergebnis bleiben aktiv.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.82f)
+                )
+            }
+        }
 
-            val question = viewModel.currentQuestion()
-
-            Text(
-                text = "Frage ${currentIndex + 1} von ${viewModel.totalQuestions}",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            StatusPill(
+                label = "Fortschritt",
+                value = "${currentIndex + 1}/${viewModel.totalQuestions}"
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            StatusPill(
+                label = "Punkte",
+                value = score.toString()
+            )
+        }
 
+        AnimatedContent(
+            targetState = question.question,
+            transitionSpec = {
+                (slideInHorizontally { it } + fadeIn())
+                    .togetherWith(slideOutHorizontally { -it } + fadeOut())
+            },
+            label = "QuestionAnimation"
+        ) { questionText ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(26.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Text(
-                    text = question.question,
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-
-            val options = if (question.type == QuestionType.TRUE_FALSE) {
-                listOf("Wahr", "Falsch")
-            } else {
-                question.options
-            }
-
-            options.forEach { option ->
-                AnswerButton(
-                    text = option,
-                    selectedAnswer = selectedAnswer,
-                    currentAnswer = question.correctAnswer,
-                    onClick = {
-                        val isCorrect = viewModel.selectAnswer(option)
-
-                        if (isCorrect) {
-                            audioPlayer?.playCorrect()
-                        } else {
-                            audioPlayer?.playWrong()
-                        }
-                    }
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-
-            }
-
-            if (selectedAnswer != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-
-                    onClick = {
-
-                        audioPlayer?.playFlip()
-
-                        viewModel.nextQuestion()
-
-                    },
-
-                    modifier = Modifier.fillMaxWidth()
-
+                Column(
+                    modifier = Modifier.padding(22.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-
-                    val isLast = currentIndex == viewModel.totalQuestions - 1
-
-                    Text(if (isLast) "Ergebnis anzeigen" else "Weiter")
-
+                    Text(
+                        text = "Frage",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = questionText,
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Start,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
         }
 
+        options.forEach { option ->
+            AnswerButton(
+                text = option,
+                selectedAnswer = selectedAnswer,
+                currentAnswer = question.correctAnswer,
+                onClick = {
+                    val isCorrect = viewModel.selectAnswer(option)
+                    if (isCorrect) {
+                        audioPlayer?.playCorrect()
+                    } else {
+                        audioPlayer?.playWrong()
+                    }
+                }
+            )
+        }
 
+        if (selectedAnswer != null) {
+            Button(
+                onClick = {
+                    audioPlayer?.playFlip()
+                    viewModel.nextQuestion()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                val isLast = currentIndex == viewModel.totalQuestions - 1
+                Text(if (isLast) "Ergebnis anzeigen" else "Weiter")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(1.dp))
+    }
+}
+
+@Composable
+private fun StatusPill(
+    label: String,
+    value: String
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.76f)
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 
@@ -150,54 +251,132 @@ private fun AnswerButton(
         else -> MaterialTheme.colorScheme.secondaryContainer
     }
 
+    val contentColor = when {
+        answered && (text == currentAnswer || text == selectedAnswer) -> Color.White
+        else -> MaterialTheme.colorScheme.onSecondaryContainer
+    }
+
     Button(
         onClick = onClick,
         enabled = !answered,
         modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = MaterialTheme.colorScheme.primary, disabledContainerColor = containerColor
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = containerColor,
+            disabledContentColor = contentColor
         )
-
     ) {
-        Text(text = text, style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(vertical = 6.dp)
+        )
     }
-
-
 }
+
 @Composable
 private fun ResultContent(
     score: Int,
     total: Int,
     audioPlayer: AudioPlayer?,
     onRestart: () -> Unit
-
 ) {
     LaunchedEffect(Unit) {
         when {
             score == total -> audioPlayer?.playPerfect()
             score < total / 2 -> audioPlayer?.playLose()
             else -> audioPlayer?.playVictory()
+        }
+    }
 
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (score == total) {
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = listOf(
+                    Party(
+                        speed = 25f,
+                        maxSpeed = 50f,
+                        angle = 270,
+                        spread = 360,
+                        emitter = Emitter(
+                            duration = 2,
+                            TimeUnit.SECONDS
+                        ).perSecond(200),
+                        position = Position.Relative(0.5, 0.0)
+                    )
+                )
+            )
         }
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(28.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.18f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                    Text(
+                        text = "Quiz beendet!",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                    Text(
+                        text = "Du hast $score von $total Fragen richtig beantwortet.",
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                    Button(
+                        onClick = onRestart,
+                        shape = RoundedCornerShape(18.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = null
+                        )
+                        Text(" Nochmal spielen")
+                    }
+                }
+            }
+        }
     }
-    Text(
-        text = "Quiz beendet!",
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.Bold
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text = "Du hast $score von $total Fragen richtig beantwortet.",
-        style = MaterialTheme.typography.titleLarge,
-        textAlign = TextAlign.Center
-    )
-    Spacer(modifier = Modifier.height(32.dp))
-    Button(onClick = onRestart) {
-        Text("Nochmal Spielen")
-    }
-
-
 }
+
 @Preview(showSystemUi = true)
 @Composable
 private fun QuizScreenPreview() {

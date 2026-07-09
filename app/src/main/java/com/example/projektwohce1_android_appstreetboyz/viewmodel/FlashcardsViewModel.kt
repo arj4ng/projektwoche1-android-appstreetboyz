@@ -66,12 +66,6 @@ class FlashcardsViewModel: ViewModel() {
         _sessionSwipedIds.value = emptySet() // Reset session when changing category
     }
 
-    fun previousCard() {
-        if (_currentIndex.value > 0) {
-            _currentIndex.value -= 1
-        }
-    }
-
     fun swipeRight(card: Flashcard) {
         if (_isRepeatMode.value) {
             // Aus der Wiederholungsliste löschen
