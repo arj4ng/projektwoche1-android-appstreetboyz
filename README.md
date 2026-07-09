@@ -1,10 +1,10 @@
 <div align="center">
 
-# AppStreetBoyz Learning App
+# AppStreetBoyz Lern-App
 
 <p>
-  <strong>Modern Android study app</strong><br/>
-  Flashcards, quotes, quiz, audio feedback, repeat flows, favorites, dark mode.
+  <strong>Moderne Android-Lern-App</strong><br/>
+  Flashcards, Quotes, Quiz, Audio-Feedback, Wiederholungslogik, Favoriten, Dark Mode.
 </p>
 
 <p>
@@ -21,31 +21,31 @@
 <table>
   <tr>
     <td width="52%" valign="top">
-      <h2>What Project Is</h2>
+      <h2>Was Projekt Ist</h2>
       <p>
-        AppStreetBoyz is compact learning app built in <strong>Kotlin</strong> with <strong>Jetpack Compose</strong>.
-        It mixes three core study modes into one flow:
+        AppStreetBoyz ist kleine Lern-App in <strong>Kotlin</strong> mit <strong>Jetpack Compose</strong>.
+        Sie verbindet drei Hauptbereiche in einem Flow:
       </p>
       <ul>
-        <li><strong>Flashcards</strong> for active recall</li>
-        <li><strong>Quotes</strong> for short motivation and saved favorites</li>
-        <li><strong>Quiz</strong> for fast knowledge checks with sound and result feedback</li>
+        <li><strong>Flashcards</strong> für aktives Lernen</li>
+        <li><strong>Quotes</strong> für kurze Motivation und Favoriten</li>
+        <li><strong>Quiz</strong> für schnelle Wissensabfragen mit Sound und Ergebnis-Feedback</li>
       </ul>
       <p>
-        Project started as team app and now has more polished UI direction:
-        stronger typography, custom color theme, modern cards, cleaner dashboards, and better dark mode handling.
+        Projekt stammt aus Teamarbeit und hat inzwischen deutlich stärkeren UI-Fokus:
+        eigene Farben, bewusstere Typografie, moderne Kartenlayouts, besserer Dark Mode und klarere Screen-Hierarchie.
       </p>
     </td>
     <td width="48%" valign="top">
       <h2>Highlights</h2>
       <ul>
-        <li>Custom light + dark theme</li>
-        <li>Modern home dashboard</li>
-        <li>Swipe flashcards with repeat logic</li>
-        <li>Quote filters + favorites</li>
-        <li>Quiz with animations, sounds, confetti</li>
-        <li>Bottom navigation app shell</li>
-        <li>StateFlow-based MVVM structure</li>
+        <li>Eigenes Light- und Dark-Theme</li>
+        <li>Moderner Home-Dashboard-Screen</li>
+        <li>Swipe-Flashcards mit Wiederholungslogik</li>
+        <li>Quotes mit Filtern und Favoriten</li>
+        <li>Quiz mit Animationen, Sounds und Konfetti</li>
+        <li>Bottom Navigation als App-Shell</li>
+        <li>MVVM mit StateFlow</li>
       </ul>
     </td>
   </tr>
@@ -53,63 +53,63 @@
 
 <hr/>
 
-<h2>Feature Overview</h2>
+<h2>Feature-Überblick</h2>
 
 <h3>Home</h3>
 <ul>
-  <li>Hero dashboard entry screen</li>
-  <li>Quick stats for total cards and repeat cards</li>
-  <li>Daily quote section</li>
-  <li>Fast jump into learning or repeat flow</li>
+  <li>Dashboard-artiger Einstieg</li>
+  <li>Schnelle Übersicht über Karten und Wiederholungen</li>
+  <li>Tagesquote direkt auf dem Startscreen</li>
+  <li>Soforter Einstieg in Lernen oder Repeat-Modus</li>
 </ul>
 
 <h3>Flashcards</h3>
 <ul>
-  <li>Topic-based study cards from local data</li>
-  <li>Tap to flip question ↔ answer</li>
-  <li>Swipe right = learned</li>
-  <li>Swipe left = send to repeat queue</li>
-  <li>Repeat mode for missed cards</li>
-  <li>Audio feedback on card flip</li>
-  <li>Dark-mode-safe swipe colors and readable text</li>
+  <li>Themenbasierte Lernkarten aus lokaler Datenquelle</li>
+  <li>Tap zum Drehen von Frage ↔ Antwort</li>
+  <li>Swipe nach rechts = gelernt</li>
+  <li>Swipe nach links = für Wiederholung merken</li>
+  <li>Eigener Wiederholungsmodus für Fehlerkarten</li>
+  <li>Audio-Feedback beim Flippen</li>
+  <li>Dark-Mode-sichere Swipe-Farben mit lesbarem Text</li>
 </ul>
 
 <h3>Quotes</h3>
 <ul>
-  <li>Modern quote browser</li>
-  <li>Category filter chips</li>
-  <li>Favorite toggle with local in-memory state</li>
-  <li>Dedicated favorites view</li>
+  <li>Moderner Quotes-Bereich</li>
+  <li>Kategorie-Filter</li>
+  <li>Favoritenfunktion pro Quote</li>
+  <li>Eigene Favoritenansicht</li>
 </ul>
 
 <h3>Quiz</h3>
 <ul>
-  <li>Multiple choice + true/false questions</li>
-  <li>Animated question transitions</li>
-  <li>Correct / wrong / next / result sounds</li>
-  <li>Perfect-score confetti result state</li>
-  <li>Score tracking and restart flow</li>
+  <li>Multiple Choice und Wahr/Falsch</li>
+  <li>Animierte Fragewechsel</li>
+  <li>Sound für richtig, falsch, weiter und Ergebnis</li>
+  <li>Konfetti bei perfektem Ergebnis</li>
+  <li>Punkte- und Neustart-Logik</li>
 </ul>
 
 <hr/>
 
-<h2>Tech Stack</h2>
+<h2>Technik</h2>
 
 <table>
-  <tr><td><strong>Language</strong></td><td>Kotlin</td></tr>
+  <tr><td><strong>Sprache</strong></td><td>Kotlin</td></tr>
   <tr><td><strong>UI</strong></td><td>Jetpack Compose + Material 3</td></tr>
-  <tr><td><strong>Architecture</strong></td><td>MVVM</td></tr>
+  <tr><td><strong>Architektur</strong></td><td>MVVM</td></tr>
   <tr><td><strong>State</strong></td><td>StateFlow / MutableStateFlow</td></tr>
   <tr><td><strong>Navigation</strong></td><td>Navigation Compose</td></tr>
-  <tr><td><strong>Data</strong></td><td>Local static DataSource</td></tr>
-  <tr><td><strong>Audio</strong></td><td>Custom AudioPlayer hooks</td></tr>
-  <tr><td><strong>Effects</strong></td><td>Konfetti for perfect quiz result</td></tr>
+  <tr><td><strong>Daten</strong></td><td>Lokale statische DataSource</td></tr>
+  <tr><td><strong>Audio</strong></td><td>Custom AudioPlayer</td></tr>
+  <tr><td><strong>Effekte</strong></td><td>Konfetti für perfektes Quiz-Ergebnis</td></tr>
   <tr><td><strong>Min SDK</strong></td><td>24</td></tr>
 </table>
 
 <hr/>
 
-<h2>Project Structure</h2>
+<h2>Projektstruktur</h2>
 
 <pre><code>app/src/main/java/com/example/projektwohce1_android_appstreetboyz/
 ├── audioplayer/
@@ -133,45 +133,46 @@
 
 <hr/>
 
-<h2>Run Project</h2>
+<h2>Projekt starten</h2>
 
 <ol>
-  <li>Open project in <strong>Android Studio</strong></li>
-  <li>Sync Gradle</li>
-  <li>Run on emulator or physical Android device</li>
+  <li>Projekt in <strong>Android Studio</strong> öffnen</li>
+  <li>Gradle synchronisieren</li>
+  <li>App auf Emulator oder Android-Gerät starten</li>
 </ol>
 
 <p>
-  Main app flow starts from <code>Appstart.kt</code>.
+  Haupteinstieg liegt in <code>Appstart.kt</code>.
 </p>
 
 <hr/>
 
-<h2>Why This Project Stands Out</h2>
+<h2>Warum Projekt auffällt</h2>
 
 <p>
-  This is not just plain classroom CRUD app.
-  It has motion, interaction, themed UI, sound feedback, repeat learning logic, and multiple study surfaces inside one small Android app.
+  Das hier ist nicht nur einfache Demo-App.
+  Projekt hat Interaktion, Bewegung, Audio, Lernlogik, Favoriten und mehrere Screens mit gemeinsamer visueller Richtung.
 </p>
 
 <p>
-  Biggest strength = app feels like real product direction, not just disconnected demo screens.
+  Größte Stärke:
+  App fühlt sich inzwischen eher wie kleines Produkt an und nicht wie lose Sammlung einzelner Compose-Übungen.
 </p>
 
 <hr/>
 
-<h2>Next Good Upgrades</h2>
+<h2>Sinnvolle nächste Schritte</h2>
 
 <ul>
-  <li>Persist favorites and progress locally</li>
-  <li>Add tests for ViewModels and key flows</li>
-  <li>Unify top bar / bottom nav styling even more</li>
-  <li>Add onboarding or empty-state illustrations</li>
-  <li>Track streaks or study sessions</li>
+  <li>Favoriten und Lernfortschritt lokal speichern</li>
+  <li>Tests für ViewModels und Hauptflows ergänzen</li>
+  <li>Top Bar und Bottom Nav weiter angleichen</li>
+  <li>Onboarding oder Empty States ergänzen</li>
+  <li>Streaks oder Session-Tracking einbauen</li>
 </ul>
 
 <hr/>
 
 <div align="center">
-  <strong>Built with Kotlin, Compose, and too many UI polish passes.</strong>
+  <strong>Gebaut mit Kotlin, Compose und viel UI-Polish.</strong>
 </div>
